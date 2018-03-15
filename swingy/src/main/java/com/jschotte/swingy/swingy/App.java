@@ -8,6 +8,25 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+    	try
+    	{
+	    	if (args[0].equals("console"))
+	    		System.out.println( "Hello World!" );
+	    	else if (args[0].equals("gui"))
+	    		System.out.println("GUI");
+	    	else
+	    	{
+	    		System.out.println("Usage: [console/gui]");
+	    		System.exit(0);
+	    	}
+    	}
+    	catch (IndexOutOfBoundsException e)
+    	{
+    		System.out.println("Usage: java -jar swingy.jar [console/gui]");
+    	}
+    	catch (Exception e)
+    	{
+    		System.out.println(e.getMessage());
+    	}
     }
 }

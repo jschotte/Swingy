@@ -26,23 +26,50 @@ public class GameControler
     	try
     	{
 			this.getHeroes();
-		} catch (IOException e)
+		}
+    	catch (IOException e)
     	{
 			e.printStackTrace();
 		}
     	if (this.view instanceof consoleView)
     		this.homeSelection();
+    	else
+    	{
+    		((GUIView)this.view).GUISelection(game.getHeroes());
+    		((GUIView)this.view).getSelectHero().addActionListener(new SelectHeroListener());
+    		((GUIView)this.view).getNewHero().addActionListener(new newHeroListener());	
+    	}
 	}
 	
-	class SelectHeroListener implements ActionListener{
-
+	private class SelectHeroListener implements ActionListener
+	{
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			
-			
+			System.out.println("select");
 		}
-		
+	}
+	
+	private class newHeroListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			((GUIView)view).GUICreationHero();
+			((GUIView)view).getCreateHero().addActionListener(new createHeroListener());
+		}	
+	}
+	
+	private class createHeroListener implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			game.addHero(heroFactory.newHero(((GUIView)view).getHeroName().getText(), ((GUIView)view).getClassLst().getSelectedItem().toString()));
+			((GUIView)view).GUISelection(game.getHeroes());
+    		((GUIView)view).getSelectHero().addActionListener(new SelectHeroListener());
+    		((GUIView)view).getNewHero().addActionListener(new newHeroListener());	
+		}	
 	}
 	
 	public void homeSelection()

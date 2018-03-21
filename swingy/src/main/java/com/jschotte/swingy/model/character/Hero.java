@@ -47,9 +47,9 @@ public abstract class Hero
 		
 		this.setHitPoints(hp);
 		
-		this.weapon = "";
-		this.armor = "";
-		this.helm = "";
+		this.weapon = null;
+		this.armor = null;
+		this.helm = null;
 	}
 	
 	public Hero(String name, int baseattack, int basedefense, int basehp, int attackLevel, int defenseLevel, int hpLevel)
@@ -152,5 +152,8 @@ public abstract class Hero
 		this.helm = helm;
 	}
 	
-
+	public String toString()
+	{
+		return this.name;
+	}
 }

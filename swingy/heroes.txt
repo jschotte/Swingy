@@ -1,4 +1,4 @@
-jschotte,Mage,10,0,15,null,null,null
-jschotte,Warrior,10,0,20,null,null,null
-jschotte,Paladin,10,0,25,null,null,null
-jschotte,Hunter,10,0,10,null,null,null
+jschotte1,Mage,10,0,15,null,null,null
+jschotte2,Warrior,10,0,20,null,null,null
+jschotte3,Paladin,10,0,25,null,null,null
+jschotte4,Hunter,10,0,10,null,null,null

@@ -4,6 +4,8 @@ import com.jschotte.swingy.utils.customException;
 
 public class heroFactory
 {
+	public enum classes {Paladin, Mage, Warrior, Hunter};
+			
 	static public Hero newHero(String name, String type, int level, int exp, int hp)
 	{
 		Hero hero;

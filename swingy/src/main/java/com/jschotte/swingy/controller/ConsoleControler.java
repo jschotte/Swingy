@@ -10,13 +10,14 @@ import java.io.IOException;
 import com.jschotte.swingy.model.Game;
 import com.jschotte.swingy.model.character.heroFactory;
 import com.jschotte.swingy.view.GUIView;
+import com.jschotte.swingy.view.consoleView;
 
-public class GameControler extends Controler
+public class ConsoleControler extends Controler
 {
 	private Game game;
-	private GUIView view;
+	private consoleView view;
 
-	public GameControler(GUIView view, Game game)
+	public ConsoleControler(consoleView view, Game game)
 	{
 		this.view = view;
 		this.game = game;
@@ -29,43 +30,28 @@ public class GameControler extends Controler
     	{
 			e.printStackTrace();
 		}
-
-		this.view.GUISelection(game.getHeroes());
-		this.view.getSelectHero().addActionListener(new SelectHeroListener());
-		this.view.getNewHero().addActionListener(new newHeroListener());	
+    	this.homeSelection();
 	}
 	
-	private class SelectHeroListener implements ActionListener
+	
+	public void homeSelection()
 	{
-		@Override
-		public void actionPerformed(ActionEvent e)
+		int ret = this.view.showHeroes(game.getHeroes());
+		if (ret == 0)
 		{
-			System.out.println("select");
+			this.game.addHero(this.view.createHero());
+			this.homeSelection();
+		}
+		else if (ret < 0 || ret > this.game.getHeroes().size())
+		{
+			System.out.println("index invalid");
+			this.homeSelection();
+		}
+		else
+		{
+			System.out.println("start game");
 		}
 	}
-	
-	private class newHeroListener implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			view.GUICreationHero();
-			view.getCreateHero().addActionListener(new createHeroListener());
-		}	
-	}
-	
-	private class createHeroListener implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			game.addHero(heroFactory.newHero(((GUIView)view).getHeroName().getText(), ((GUIView)view).getClassLst().getSelectedItem().toString()));
-			view.GUISelection(game.getHeroes());
-    		view.getSelectHero().addActionListener(new SelectHeroListener());
-    		view.getNewHero().addActionListener(new newHeroListener());	
-		}	
-	}
-
 	
 	public void getHeroes() throws IOException
 	{

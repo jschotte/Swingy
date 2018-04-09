@@ -1,31 +1,31 @@
 package com.jschotte.swingy.swingy;
 
+import com.jschotte.swingy.controller.ConsoleControler;
+import com.jschotte.swingy.controller.Controler;
 import com.jschotte.swingy.controller.GameControler;
 import com.jschotte.swingy.model.Game;
 import com.jschotte.swingy.view.GUIView;
-import com.jschotte.swingy.view.ViewInterface;
 import com.jschotte.swingy.view.consoleView;
 
 public class App 
 {
     public static void main( String[] args )
     {
-    	GameControler gameControler;
+    	Controler gameControler;
     	Game game = new Game();
-    	ViewInterface view;
     	try
     	{
 	    	if (args[0].equals("console"))
-	    		view = new consoleView();
+	    		gameControler = new ConsoleControler(new consoleView(), game);
 	    	else if (args[0].equals("gui"))
-	    		view = new GUIView();
+	    		gameControler = new GameControler(new GUIView(), game);
 	    	else
 	    	{
 	    		System.out.println("Usage: [console/gui]");
 	    		System.exit(0);
 	    		return;
 	    	}
-	    	gameControler = new GameControler(view, game);
+	    	
 	    	//gameControler.homeSelection();
     	}
     	catch (IndexOutOfBoundsException e)

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.jschotte.swingy.model.character.Hero;
 import com.jschotte.swingy.model.character.heroFactory;
 
-public class consoleView implements ViewInterface
+public class consoleView
 {
 
 	public int showHeroes(ArrayList<Hero> heroes)

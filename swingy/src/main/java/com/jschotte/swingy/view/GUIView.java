@@ -3,13 +3,14 @@ package com.jschotte.swingy.view;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
-import javax.swing.AbstractListModel;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -19,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import com.jschotte.swingy.model.character.Hero;
 import com.jschotte.swingy.model.character.heroFactory;
 
-public class GUIView extends JFrame implements ViewInterface
+public class GUIView extends JFrame
 {
 	private JPanel panel;
 	private JButton selectHero;
@@ -33,7 +34,6 @@ public class GUIView extends JFrame implements ViewInterface
     private JComboBox classLst;
 	private JButton createHero;
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GUIView()
 	{
 		this.panel = new JPanel();
@@ -45,7 +45,7 @@ public class GUIView extends JFrame implements ViewInterface
 		this.setVisible(true);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void GUISelection(ArrayList<Hero> heroes)
 	{
 		this.panel.removeAll();
@@ -82,7 +82,13 @@ public class GUIView extends JFrame implements ViewInterface
         jTextArea1.setColumns(20);
         jTextArea1.setRows(10);
 
-        this.panel.add(new JScrollPane(jList1));
+        JScrollPane scrollPane = new JScrollPane(jList1, 
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        scrollPane.setPreferredSize(new Dimension(280, 150));
+        
+        this.panel.add(scrollPane);
         this.panel.add(jTextArea1);
         this.panel.add(selectHero);
         this.panel.add(newHero);
@@ -96,7 +102,6 @@ public class GUIView extends JFrame implements ViewInterface
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt)
     {
 		this.selectHero.setEnabled(true);
-        String s = (String) jList1.getSelectedValue();
         Hero selectedHero = heroesTmp.get(jList1.getSelectedIndex());
         
         jTextArea1.setText(selectedHero.getName() + "\n" + selectedHero.getClass().getSimpleName() + "\nlv: "
@@ -112,6 +117,7 @@ public class GUIView extends JFrame implements ViewInterface
 		return (0);
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void GUICreationHero()
 	{
 		this.panel.removeAll();

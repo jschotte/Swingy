@@ -10,9 +10,9 @@ public class Paladin extends Hero
 	private static int defenseLevel = 4;
 	private static int hpLevel = 10;
 	
-	public Paladin(String name, int level, int exp, int hp)
+	public Paladin(String name, int level, int exp, int hp, String weapon, String armor, String helm)
 	{
-		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel);
+		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel, weapon, armor, helm);
 	}
 	
 	public Paladin(String name)

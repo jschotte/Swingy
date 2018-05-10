@@ -1,20 +1,15 @@
 package com.jschotte.swingy.controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
 import java.io.IOException;
 
+import com.jschotte.swingy.artefact.Artefact;
 import com.jschotte.swingy.model.Game;
-import com.jschotte.swingy.model.character.heroFactory;
-import com.jschotte.swingy.view.GUIView;
+import com.jschotte.swingy.model.Vilain;
 import com.jschotte.swingy.view.consoleView;
 
 public class ConsoleControler extends Controler
 {
-	private Game game;
 	private consoleView view;
 
 	public ConsoleControler(consoleView view, Game game)
@@ -25,14 +20,11 @@ public class ConsoleControler extends Controler
     	try
     	{
 			this.getHeroes();
-		}
-    	catch (IOException e)
-    	{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
     	this.homeSelection();
 	}
-	
 	
 	public void homeSelection()
 	{
@@ -44,39 +36,137 @@ public class ConsoleControler extends Controler
 		}
 		else if (ret < 0 || ret > this.game.getHeroes().size())
 		{
-			System.out.println("index invalid");
 			this.homeSelection();
 		}
 		else
 		{
-			System.out.println("start game");
+			this.game.initGame(this.game.getHeroes().get(ret - 1));
+			this.view.clearScreen();
+			this.main();
 		}
 	}
 	
-	public void getHeroes() throws IOException
+	public boolean fight(Vilain v)
 	{
-		try
+		int power = v.getPower();
+		double base = 100 - (power * 7) + ((this.game.getCurrentHero().getDefense() + this.game.getCurrentHero().getAttack()) / 2);
+		int rand = (int)(Math.random() * (100) + 1);
+		//System.out.println(base + "% | " + rand + "/100");
+		if (rand <= (int)base)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean run(Vilain v)
+	{
+		int rand = (int)(Math.random() * (2));
+		if (rand == 1)
+			return true;
+		return false;
+	}
+	
+	public void matchVictory(Vilain vilain)
+	{
+		System.out.println("Vous avez battu le vilain");
+		int rand = (int)(Math.random() * (100) + 1);
+		int oldlevel = this.game.getCurrentHero().getLevel();
+		this.game.getCurrentHero().addExp(vilain.getPower() * 50);
+		System.out.println("Vous avez gagne " + vilain.getPower() * 50 + " points d'experiences");
+		int newlevel = this.game.getCurrentHero().getLevel();
+		
+		if (oldlevel != newlevel)
+			System.out.println("Vous etes passes au level " + newlevel);
+		if (rand <= vilain.getPower())
 		{
-			@SuppressWarnings("resource")
-			BufferedReader reader = new BufferedReader(new FileReader("heroes.txt"));
-			String line;
-			while ((line = reader.readLine()) != null)
+			Artefact test = this.game.getArtefact().get((int)(Math.random() * (this.game.getArtefact().size())));
+			int ret = this.view.keepItem(test);
+			while (ret < 0 || ret > 1)
+				ret = this.view.keepItem(test);
+			if (ret == 0)
+				this.setItem(test);
+		}
+	}
+	
+	public void matchdefeate()
+	{
+		System.out.println("Vous avez perdu contre le vilain, vous etes mort");
+		this.game.getHeroes().remove(this.game.getCurrentHero());
+		this.saveHeroes();
+		System.exit(0);
+	}
+	
+	public void main()
+	{
+		
+		while (true)
+		{
+			int retgame = this.view.mainGame(game);
+			while (retgame < 0 || retgame > 4)
 			{
-				String split[] = line.split(",");
-				game.addHero(heroFactory.newHero(split[0], split[1], Integer.valueOf(split[2]), Integer.valueOf(split[3]), Integer.valueOf(split[4])));
+				this.view.clearScreen();
+				retgame = this.view.mainGame(game);
 			}
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch (Exception e)
-		{
-			System.out.println(e.toString());
-			System.exit(0);
+			if (retgame == 4)
+				return;
+			this.view.clearScreen();
+			this.game.getMap()[this.game.getPosHerox()][this.game.getPosHeroy()] = 0;
+			int oldx = this.game.getPosHerox();
+			int oldy = this.game.getPosHeroy();
+			this.updatePosPlayer(retgame);
+			int ret;
+			if (this.game.getMap()[this.game.getPosHerox()][this.game.getPosHeroy()] == 2)
+			{
+				Vilain vilain = null;
+				for (Vilain v : this.game.getVilains())
+				{
+					if (v.getPosX() == this.game.getPosHerox() && v.getPosY() == this.game.getPosHeroy())
+						vilain = v;
+				}
+				while ((ret = this.view.chooseFight(vilain)) < 0 || ret > 1)
+				{
+				}
+				if (ret == 0)
+				{
+					if (fight(vilain) == true)
+					{
+						matchVictory(vilain);
+					}
+					else
+					{
+						matchdefeate();
+					}
+				}
+				else
+				{
+					if (run(vilain) == true)
+					{
+						System.out.println("Vous avez reussit a vous echaper");
+						this.game.setPosHerox(oldx);
+						this.game.setPosHeroy(oldy);
+					}
+					else
+					{
+						System.out.println("Vous n'avez pas reussi a vous echaper, vous devez combatte le vilain");
+						if (fight(vilain) == true)
+						{
+							matchVictory(vilain);
+						}
+						else
+						{
+							matchdefeate();
+						}
+					}
+				}
+			}
+			this.game.getMap()[this.game.getPosHerox()][this.game.getPosHeroy()] = 1;
+			if (this.game.getPosHerox() == 0 || this.game.getPosHerox() == this.game.getSizeMap() - 1
+					|| this.game.getPosHeroy() == 0 || this.game.getPosHeroy() == this.game.getSizeMap() - 1)
+			{
+				System.out.println("Vous avez gagne !");
+				return;
+			}
 			
 		}
 	}
 }
-
-

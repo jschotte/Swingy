@@ -10,9 +10,9 @@ public class Mage extends Hero
 	private static int defenseLevel = 4;
 	private static int hpLevel = 5;
 	
-	public Mage(String name, int level, int exp, int hp)
+	public Mage(String name, int level, int exp, int hp, String weapon, String armor, String helm)
 	{
-		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel);
+		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel, weapon, armor, helm);
 	}
 	
 	public Mage(String name)

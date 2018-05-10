@@ -25,8 +25,8 @@ public class App
 	    		System.exit(0);
 	    		return;
 	    	}
-	    	
 	    	//gameControler.homeSelection();
+	    	gameControler.saveHeroes();
     	}
     	catch (IndexOutOfBoundsException e)
     	{

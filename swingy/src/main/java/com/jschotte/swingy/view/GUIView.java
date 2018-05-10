@@ -9,11 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -34,14 +37,13 @@ public class GUIView extends JFrame
     private JComboBox classLst;
 	private JButton createHero;
 	
+	public Hero selectedHero;
+	
 	public GUIView()
 	{
 		this.panel = new JPanel();
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(500,500);
 		this.add(panel);
-		
-		
 		this.setVisible(true);
 	}
 	
@@ -96,13 +98,12 @@ public class GUIView extends JFrame
 		this.setPreferredSize(new Dimension(300, 400));
 		this.setResizable(false);
 		this.pack();
-		
 	}
 	
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt)
     {
 		this.selectHero.setEnabled(true);
-        Hero selectedHero = heroesTmp.get(jList1.getSelectedIndex());
+        selectedHero = heroesTmp.get(jList1.getSelectedIndex());
         
         jTextArea1.setText(selectedHero.getName() + "\n" + selectedHero.getClass().getSimpleName() + "\nlv: "
 				+ selectedHero.getLevel() + "\nexp: " + selectedHero.getExp() + "\ndmg: "
@@ -129,11 +130,47 @@ public class GUIView extends JFrame
 		this.setClassLst(new JComboBox(heroFactory.classes.values()));
 		
 		this.setCreateHero(new JButton("Create Hero"));
+		this.createHero.setEnabled(false);
+		
+		this.heroName.getDocument().addDocumentListener(new DocumentListener()
+		{
+
+			@Override
+			public void insertUpdate(DocumentEvent e)
+			{
+				update();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e)
+			{
+				update();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e)
+			{
+				update();
+			}
+			
+			public void update()
+			{
+				if (!heroName.getText().equalsIgnoreCase(""))
+					createHero.setEnabled(true);
+				else
+					createHero.setEnabled(false);
+			}
+		});
 		
 		this.panel.add(this.getHeroName());
 		this.panel.add(this.getClassLst());
 		this.panel.add(this.getCreateHero());
 		this.pack();
+	}
+	
+	public JPanel getPanel()
+	{
+		return this.panel;
 	}
 	
 	public Hero createHero()

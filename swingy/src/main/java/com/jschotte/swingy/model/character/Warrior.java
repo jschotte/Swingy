@@ -10,9 +10,9 @@ public class Warrior extends Hero
 	private static int defenseLevel = 2;
 	private static int hpLevel = 5;
 	
-	public Warrior(String name, int level, int exp, int hp)
+	public Warrior(String name, int level, int exp, int hp, String weapon, String armor, String helm)
 	{
-		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel);
+		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel, weapon, armor, helm);
 	}
 
 	public Warrior(String name)

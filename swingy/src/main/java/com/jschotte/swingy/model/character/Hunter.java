@@ -10,9 +10,9 @@ public class Hunter extends Hero
 	private static int defenseLevel = 2;
 	private static int hpLevel = 3;
 	
-	public Hunter(String name, int level, int exp, int hp)
+	public Hunter(String name, int level, int exp, int hp, String weapon, String armor, String helm)
 	{
-		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel);
+		super(name, level, exp, hp, baseAttack, baseDefense, baseHp, attackLevel, defenseLevel, hpLevel, weapon, armor, helm);
 	}
 	
 	public Hunter(String name)

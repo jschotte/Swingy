@@ -1,5 +1,10 @@
 package com.jschotte.swingy.model.character;
 
+import com.jschotte.swingy.artefact.Armor;
+import com.jschotte.swingy.artefact.Artefact;
+import com.jschotte.swingy.artefact.Helm;
+import com.jschotte.swingy.artefact.Weapon;
+import com.jschotte.swingy.artefact.artefactFactory;
 import com.jschotte.swingy.utils.customException;
 
 public abstract class Hero
@@ -7,6 +12,7 @@ public abstract class Hero
 	private String name;
 	private int level;
 	private int exp;
+	private int maxExp;
 	
 	protected int attack;
 	private int defense;
@@ -18,17 +24,18 @@ public abstract class Hero
 	private int defensePerLevel;
 	private int hpPerLevel;
 	
-	private String weapon;
-	private String armor;
-	private String helm;
+	private Weapon weapon;
+	private Armor armor;
+	private Helm helm;
 	
-	public Hero(String name, int level, int exp, int hp, int baseattack, int basedefense, int basehp, int attackLevel, int defenseLevel, int hpLevel)
+	public Hero(String name, int level, int exp, int hp, int baseattack, int basedefense, int basehp, int attackLevel, int defenseLevel, int hpLevel, String weapon, String armor, String helm)
 	{
 		if (level < 1 || exp < 0 || hp < 0)
 			throw new customException("heroes data invalid");
 		this.name = name;
 		this.level = level;
 		this.exp = exp;
+		this.maxExp = this.level * 1000 + (this.level - 1) * (this.level - 1) * 450;
 		
 		this.attack = baseattack;
 		this.defense = basedefense;
@@ -47,9 +54,9 @@ public abstract class Hero
 		
 		this.setHitPoints(hp);
 		
-		this.weapon = null;
-		this.armor = null;
-		this.helm = null;
+		this.weapon = artefactFactory.newWeaponArtefact(weapon);
+		this.armor = artefactFactory.newArmorArtefact(armor);
+		this.helm = artefactFactory.newHelmArtefact(helm);
 	}
 	
 	public Hero(String name, int baseattack, int basedefense, int basehp, int attackLevel, int defenseLevel, int hpLevel)
@@ -57,7 +64,8 @@ public abstract class Hero
 		this.name = name;
 		this.level = 1;
 		this.exp = 0;
-		
+		this.maxExp = this.level * 1000 + (this.level - 1) * (this.level - 1) * 450;
+
 		this.attack = baseattack;
 		this.defense = basedefense;
 		this.maxHp = basehp;
@@ -66,6 +74,28 @@ public abstract class Hero
 		this.attackPerLevel = attackLevel;
 		this.defensePerLevel = defenseLevel;
 		this.hpPerLevel = hpLevel;
+		
+		this.weapon = null;
+		this.armor = null;
+		this.helm = null;
+	}
+	
+	public void addExp(int exp)
+	{
+		this.exp += exp;
+		if (this.exp >= this.maxExp)
+		{
+			this.level++;
+			this.attack += this.attackPerLevel;
+			this.defense += this.defensePerLevel;
+			this.maxHp += this.hpPerLevel;
+			
+			this.hp = this.maxHp;
+			this.exp = this.exp - this.maxExp;
+			
+			this.maxExp = this.level * 1000 + (this.level - 1) * (this.level - 1) * 450;
+
+		}
 	}
 	
 	public String getName() {
@@ -128,27 +158,27 @@ public abstract class Hero
 		this.maxHp = maxHitPoints;
 	}
 
-	public String getWeapon() {
+	public Artefact getWeapon() {
 		return weapon;
 	}
 
-	public void setWeapon(String weapon) {
+	public void setWeapon(Weapon weapon) {
 		this.weapon = weapon;
 	}
 
-	public String getArmor() {
+	public Artefact getArmor() {
 		return armor;
 	}
 
-	public void setArmor(String armor) {
+	public void setArmor(Armor armor) {
 		this.armor = armor;
 	}
 
-	public String getHelm() {
+	public Artefact getHelm() {
 		return helm;
 	}
 
-	public void setHelm(String helm) {
+	public void setHelm(Helm helm) {
 		this.helm = helm;
 	}
 	
